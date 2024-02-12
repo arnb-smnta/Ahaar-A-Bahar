@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { jwtVerify } from "../middlewares/auth.middleware";
+import { jwtVerify } from "../middlewares/auth.middleware.js";
 import {
   createOrder,
   toggleCancelOrder,
-} from "../controllers/order.controller";
+} from "../controllers/order.controller.js";
 
 const router = Router();
 

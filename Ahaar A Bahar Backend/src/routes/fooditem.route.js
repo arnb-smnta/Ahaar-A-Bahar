@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { jwtVerify } from "../middlewares/auth.middleware";
+import { jwtVerify } from "../middlewares/auth.middleware.js";
 import {
   createFoodItem,
   deleteFoodItem,
@@ -7,8 +7,8 @@ import {
   toggleisAvailable,
   updateFoodItemDetails,
   updateFoodItemPhoto,
-} from "../controllers/fooditem.controller";
-import { multerupload } from "../middlewares/multer.midlleware";
+} from "../controllers/fooditem.controller.js";
+import { multerupload } from "../middlewares/multer.midlleware.js";
 
 const router = Router();
 router
@@ -24,4 +24,4 @@ router
   .patch(multerupload.single("photo"), updateFoodItemPhoto);
 router.route("/toggleisfooditemavailable/:fooditem_id").post(toggleisAvailable);
 
-export default router();
+export default router;

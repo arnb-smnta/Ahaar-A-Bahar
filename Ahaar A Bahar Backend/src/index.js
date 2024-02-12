@@ -1,14 +1,20 @@
 import express from "express";
-import { jokes } from "./utils/constants.js";
+
 import { envport } from "./utils/envFiles.js";
 import connectDb from "./db/index.js";
 import { app } from "./app.js";
 
-const port = envport;
-connectDb();
+connectDb()
+  .then((result) => {
+    app.on("error", (e) => {
+      console.log("error in express mongo connection", e);
+      throw Error;
+    });
 
-
-
-app.listen(port, () => {
-  console.log(`App is listening at port ${port}`);
-});
+    app.listen(envport || 8000, () => {
+      console.log(` Server is running at port `, envport);
+    });
+  })
+  .catch((err) => {
+    console.log("MongoDB connection failed");
+  });

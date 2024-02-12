@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { jwtVerify } from "../middlewares/auth.middleware";
+import { jwtVerify } from "../middlewares/auth.middleware.js";
 import {
   addItemsinFavouriteList,
   createFavouriteList,
@@ -7,7 +7,7 @@ import {
   deleteItemsinFavouriteList,
   getFavouriteList,
   updateFavouriteListName,
-} from "../controllers/favouriteList.controller";
+} from "../controllers/favouriteList.controller.js";
 const router = Router();
 router.route("/create-favouritelist").post(jwtVerify, createFavouriteList);
 router

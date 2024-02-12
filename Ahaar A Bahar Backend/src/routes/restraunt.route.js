@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { jwtVerify } from "../middlewares/auth.middleware";
+import { jwtVerify } from "../middlewares/auth.middleware.js";
 import {
   createRestraunt,
   deleteRestraunt,
   getRestrauntDetails,
   toogleRestrauntIsOpen,
   updateRestrauntDetails,
-} from "../controllers/restraunt.controller";
+} from "../controllers/restraunt.controller.js";
 
 const router = Router();
 router.route("/create-restraunt").post(jwtVerify, createRestraunt);

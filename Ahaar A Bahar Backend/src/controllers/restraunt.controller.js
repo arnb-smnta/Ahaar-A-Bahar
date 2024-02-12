@@ -1,4 +1,4 @@
-import { asyncHandler } from "../utils/asyncHandler";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const createRestraunt = asyncHandler(async (req, res) => {});
 export const deleteRestraunt = asyncHandler(async (req, res) => {});

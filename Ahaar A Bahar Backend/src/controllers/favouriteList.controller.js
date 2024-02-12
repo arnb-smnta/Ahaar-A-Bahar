@@ -1,4 +1,4 @@
-import { asyncHandler } from "../utils/asyncHandler";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const createFavouriteList = asyncHandler(async (req, res) => {});
 export const deleteFavouriteList = asyncHandler(async (req, res) => {});
