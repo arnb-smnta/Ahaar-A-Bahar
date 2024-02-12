@@ -6,7 +6,7 @@ import {
   AccessTokenSecret,
   RefreshTokenExpiry,
   RefreshTokenSecret,
-} from "../utils/envFiles";
+} from "../utils/envFiles.js";
 const userSchema = new Schema(
   {
     username: {

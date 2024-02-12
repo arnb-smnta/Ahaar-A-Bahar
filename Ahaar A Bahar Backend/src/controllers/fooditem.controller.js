@@ -1,8 +1,8 @@
-import { asyncHandler } from "../utils/asyncHandler";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const createFoodItem = asyncHandler(async (req, res) => {});
 export const updateFoodItemDetails = asyncHandler(async (req, res) => {});
 export const updateFoodItemPhoto = asyncHandler(async (req, res) => {});
 export const toggleisAvailable = asyncHandler(async (req, res) => {});
-export const updateFoodPrice = asyncHandler(async (req, res) => {});
 export const deleteFoodItem = asyncHandler(async (req, res) => {});
+export const getFoodItemDetails = asyncHandler(async (req, res) => {});
