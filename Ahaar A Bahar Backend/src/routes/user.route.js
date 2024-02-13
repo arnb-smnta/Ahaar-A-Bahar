@@ -22,7 +22,7 @@ const router = Router();
 router.route("/register").post(multerupload.single("avatar"), registerUser);
 router.route("/verify/:token").get(verifyAccount);
 router.route("/login").post(loginUser);
-router.route("/logout").post(logoutUser);
+router.route("/logout").post(jwtVerify, logoutUser);
 router.route("/refreshAccessToken").post(refreshAccesToken);
 router.route("/change-password").post(jwtVerify, updateUserPassword);
 router

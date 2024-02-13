@@ -14,7 +14,7 @@ const generateAccessandRefreshToken = async (_id) => {
   try {
     const user = await User.findById(_id);
     const accessToken = user.generateAccessToken();
-    const refreshToken = user.generateRefreshToken();
+    const refreshToken = user.generateRefereshToken();
 
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
@@ -142,11 +142,11 @@ export const registerUser = asyncHandler(async (req, res) => {
 export const loginUser = asyncHandler(async (req, res) => {
   const { email, username, mobile, password } = req.body;
 
-  if (!(email && username && mobile)) {
-    throw new ApiError(400, "Atleast provide on unique field to login");
+  if (!email && !username && !mobile) {
+    throw new ApiError(400, "Atleast provide one unique field to login");
   }
 
-  const user = User.findOne({
+  const user = await User.findOne({
     $or: [{ username }, { email }, { mobile }],
   });
 
@@ -154,7 +154,7 @@ export const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid login credentials user does not exists");
   }
 
-  const isPasswordValid = await user.isPasswordValid(password);
+  const isPasswordValid = await user.isPasswordCorrect(password);
   if (!isPasswordValid) {
     throw new ApiError(401, "Wrong Password");
   }
@@ -194,7 +194,25 @@ export const verifyAccount = asyncHandler(async (req, res) => {
 
   res.status(200).json(new ApiResponse(200, {}, "EmailVerified Succesfully"));
 });
-export const logoutUser = asyncHandler(async (req, res) => {});
+export const logoutUser = asyncHandler(async (req, res) => {
+  await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $unset: {
+        refreshToken: 1, //removes the field from the document
+      },
+    },
+    {
+      new: true, //this method returns the new user object
+    }
+  );
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "User Succesfully logged out"));
+});
 export const updateUserAvatar = asyncHandler(async (req, res) => {});
 export const updateUserPassword = asyncHandler(async (req, res) => {});
 export const getUserRestrauntDetails = asyncHandler(async (req, res) => {});
