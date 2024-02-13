@@ -30,6 +30,11 @@ const userSchema = new Schema(
       trim: true,
       index: true,
     },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: String,
     mobile: {
       type: Number,
       required: true,
@@ -48,6 +53,19 @@ const userSchema = new Schema(
     refreshToken: {
       type: String,
     },
+    order: [{ type: Schema.Types.ObjectId }],
+    address: [
+      {
+        name: String,
+        mobileno: String,
+        houseNo: String,
+        street: String,
+        landmark: String,
+        city: String,
+        country: String,
+        postalcode: String,
+      },
+    ],
   },
   { timestamps: true }
 );

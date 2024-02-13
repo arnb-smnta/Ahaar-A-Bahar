@@ -20,11 +20,22 @@ const orderSchema = new Schema(
       type: number,
     },
     address: {
-      type: String,
+      name: String,
+      mobileno: String,
+      houseNo: String,
+      street: String,
+      landmark: String,
+      city: String,
+      country: String,
+      postalcode: String,
     },
     isCancelled: {
       type: Boolean,
       default: false,
+    },
+    paymentMethod: {
+      type: String,
+      required: true,
     },
   },
   { timeStamps: true }
