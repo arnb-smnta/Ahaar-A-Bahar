@@ -14,3 +14,5 @@ export const RefreshTokenExpiry = process.env.REFRESH_TOKEN_EXPIRY;
 export const CloudinaryCloudName = process.env.CLOUDINARY_CLOUD_NAME;
 export const CloudinaryApiKey = process.env.CLOUDINARY_API_KEY;
 export const CloudinaryApiSecret = process.env.CLOUDINARY_API_SECRET;
+export const email_pass = process.env.GOOGLE_EMAIL_PASS;
+export const nodemail_email = process.env.GOOGLE_EMAIL;
