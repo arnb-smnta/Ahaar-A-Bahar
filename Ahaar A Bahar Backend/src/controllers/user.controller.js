@@ -66,6 +66,57 @@ const sendVerificationEmail = async (email, verificationtoken) => {
   }
 };
 
+const forgotPasswordValidation = async (forgotPasswordToken, email) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      // TODO: replace `user` and `pass` values from <https://forwardemail.net>
+      user: `${nodemail_email}`,
+      pass: `${email_pass}`,
+    },
+  });
+  const mailoptions = {
+    from: "Ahaar A Bahar", // sender address
+    to: email, // list of receivers
+    subject: "Email verufication of Ahaar A Bahar", // Subject line
+    text: `Your otp for forgotten Password is -${forgotPasswordToken}`, // plain text body
+  };
+
+  //Send the mail
+
+  try {
+    await transporter.sendMail(mailoptions);
+    console.log("Verification mail sent Succesfully");
+  } catch (error) {
+    throw new ApiError(500, `Password forgot otp not sent retry: ${error}`);
+  }
+};
+sendNewPasswordtoUser = async (password, email) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      // TODO: replace `user` and `pass` values from <https://forwardemail.net>
+      user: `${nodemail_email}`,
+      pass: `${email_pass}`,
+    },
+  });
+  const mailoptions = {
+    from: "Ahaar A Bahar", // sender address
+    to: email, // list of receivers
+    subject: "Email verufication of Ahaar A Bahar", // Subject line
+    text: `Your new password is -${password}`, // plain text body
+  };
+
+  //Send the mail
+
+  try {
+    await transporter.sendMail(mailoptions);
+    console.log("New generated Password sent Succesfully");
+  } catch (error) {
+    throw new ApiError(500, `New generated Password not sent retry: ${error}`);
+  }
+};
+
 export const registerUser = asyncHandler(async (req, res) => {
   const { username, email, fullname, mobile, password } = req.body;
 
@@ -150,6 +201,13 @@ export const loginUser = asyncHandler(async (req, res) => {
     $or: [{ username }, { email }, { mobile }],
   });
 
+  if (!user.verified) {
+    throw new ApiError(
+      400,
+      "You have not verified your email address please verify and re-login "
+    );
+  }
+
   if (!user) {
     throw new ApiError(401, "Invalid login credentials user does not exists");
   }
@@ -214,7 +272,81 @@ export const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User Succesfully logged out"));
 });
 export const updateUserAvatar = asyncHandler(async (req, res) => {});
-export const updateUserPassword = asyncHandler(async (req, res) => {});
+export const updateUserPassword = asyncHandler(async (req, res) => {
+  //conditions to update password
+  //Forgot password or change password
+  //1st case change password
+
+  if (isPasswordForgot) {
+    const { otp } = req.body;
+    const user = await User.findOne({ forgotPasswordToken: otp });
+    if (!user) {
+      throw new ApiError(400, "Wrong otp please enter correct otp");
+    }
+
+    user.isPasswordForgot = false;
+    user.forgotPasswordToken = undefined;
+
+    user.password = crypto.randomBytes(20).toString("hex");
+    sendNewPasswordtoUser(password, user.email);
+
+    user.save({ validateBeforeSave: false });
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          {},
+          "New Password generated succesfully sent to email"
+        )
+      );
+  } else {
+    const { oldPassword, newPassword, confPassword } = req.body;
+    if (!newPassword === confPassword) {
+      throw new ApiError(
+        400,
+        "New password is not equal to confirmed Password"
+      );
+    }
+
+    const user = await User.findById(req.user?._id);
+    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+    if (!isPasswordCorrect) {
+      throw new ApiError(400, "Old password is not correct");
+    }
+
+    user.password = newPassword;
+    await user.save({ validateBeforeSave: false });
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Password is succesfully updated"));
+  }
+  //2nd case forgot password
+});
+
+export const forgotPassword = asyncHandler(async (res, req) => {
+  const { email } = req.body;
+
+  if (!email) {
+    throw new ApiError(400, "Enter your email to proceed");
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(404, "User with following email does not exists");
+  }
+  user.isPasswordForgot = true;
+  user.forgotPasswordToken = crypto.randomBytes(20).toString("hex");
+
+  user.save({ validateBeforeSave: false });
+
+  forgotPasswordValidation(user.forgotPasswordToken, email);
+
+  res.status(200).json(new ApiError(200, {}, "Otp sent to email succesfully"));
+});
+
 export const getUserRestrauntDetails = asyncHandler(async (req, res) => {});
 export const deleteUser = asyncHandler(async (req, res) => {});
 export const refreshAccesToken = asyncHandler(async (req, res) => {});

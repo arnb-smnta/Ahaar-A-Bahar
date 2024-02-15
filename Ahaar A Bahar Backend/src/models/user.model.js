@@ -53,6 +53,11 @@ const userSchema = new Schema(
     refreshToken: {
       type: String,
     },
+    forgotPasswordToken: String,
+    isPasswordForgot: {
+      type: Boolean,
+      default: false,
+    },
     order: [{ type: Schema.Types.ObjectId }],
     address: [
       {

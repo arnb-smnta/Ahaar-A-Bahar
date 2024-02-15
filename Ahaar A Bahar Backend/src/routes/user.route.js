@@ -2,6 +2,7 @@ import { Router } from "express";
 import { multerupload } from "../middlewares/multer.midlleware.js";
 import {
   deleteUser,
+  forgotPassword,
   getCurrentUser,
   getUserCart,
   getUserOrderHistory,
@@ -25,6 +26,8 @@ router.route("/login").post(loginUser);
 router.route("/logout").post(jwtVerify, logoutUser);
 router.route("/refreshAccessToken").post(refreshAccesToken);
 router.route("/change-password").post(jwtVerify, updateUserPassword);
+router.route("/forgot-password").post(forgotPassword);
+router.route("/update-forgotPassword").post(updateUserPassword);
 router
   .route("/update-avatar")
   .patch(jwtVerify, multerupload.single("avatar"), updateUserAvatar);
