@@ -13,8 +13,8 @@ router.route("/create-restraunt").post(jwtVerify, createRestraunt);
 router
   .route("/R/:restraunt_id")
   .get(getRestrauntDetails)
-  .delete(deleteRestraunt)
-  .patch(updateRestrauntDetails);
+  .delete(jwtVerify, deleteRestraunt)
+  .patch(jwtVerify, updateRestrauntDetails);
 
 router
   .route("/toggle-restaurantopenstatus")
