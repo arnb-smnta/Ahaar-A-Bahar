@@ -3,9 +3,17 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import { email_pass, envport, nodemail_email } from "../utils/envFiles.js";
+import {
+  RefreshTokenSecret,
+  email_pass,
+  envport,
+  nodemail_email,
+} from "../utils/envFiles.js";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import { decode } from "punycode";
+import mongoose from "mongoose";
+import { Cart } from "../models/cart.model.js";
 const options = {
   httpOnly: true,
   secure: true,
@@ -63,6 +71,57 @@ const sendVerificationEmail = async (email, verificationtoken) => {
     console.log("Verification mail sent Succesfully");
   } catch (error) {
     throw new ApiError(500, `Verification mail not sent error : ${error}`);
+  }
+};
+
+const forgotPasswordValidation = async (forgotPasswordToken, email) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      // TODO: replace `user` and `pass` values from <https://forwardemail.net>
+      user: `${nodemail_email}`,
+      pass: `${email_pass}`,
+    },
+  });
+  const mailoptions = {
+    from: "Ahaar A Bahar", // sender address
+    to: email, // list of receivers
+    subject: "Email verufication of Ahaar A Bahar", // Subject line
+    text: `Your otp for forgotten Password is -${forgotPasswordToken}`, // plain text body
+  };
+
+  //Send the mail
+
+  try {
+    await transporter.sendMail(mailoptions);
+    console.log("Verification mail sent Succesfully");
+  } catch (error) {
+    throw new ApiError(500, `Password forgot otp not sent retry: ${error}`);
+  }
+};
+sendNewPasswordtoUser = async (password, email) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      // TODO: replace `user` and `pass` values from <https://forwardemail.net>
+      user: `${nodemail_email}`,
+      pass: `${email_pass}`,
+    },
+  });
+  const mailoptions = {
+    from: "Ahaar A Bahar", // sender address
+    to: email, // list of receivers
+    subject: "Email verufication of Ahaar A Bahar", // Subject line
+    text: `Your new password is -${password}`, // plain text body
+  };
+
+  //Send the mail
+
+  try {
+    await transporter.sendMail(mailoptions);
+    console.log("New generated Password sent Succesfully");
+  } catch (error) {
+    throw new ApiError(500, `New generated Password not sent retry: ${error}`);
   }
 };
 
@@ -150,6 +209,13 @@ export const loginUser = asyncHandler(async (req, res) => {
     $or: [{ username }, { email }, { mobile }],
   });
 
+  if (!user.verified) {
+    throw new ApiError(
+      400,
+      "You have not verified your email address please verify and re-login "
+    );
+  }
+
   if (!user) {
     throw new ApiError(401, "Invalid login credentials user does not exists");
   }
@@ -213,12 +279,223 @@ export const logoutUser = asyncHandler(async (req, res) => {
     .clearCookie("refreshToken", options)
     .json(new ApiResponse(200, {}, "User Succesfully logged out"));
 });
-export const updateUserAvatar = asyncHandler(async (req, res) => {});
-export const updateUserPassword = asyncHandler(async (req, res) => {});
-export const getUserRestrauntDetails = asyncHandler(async (req, res) => {});
-export const deleteUser = asyncHandler(async (req, res) => {});
-export const refreshAccesToken = asyncHandler(async (req, res) => {});
-export const getCurrentUser = asyncHandler(async (req, res) => {});
-export const getUserOrderHistory = asyncHandler(async (req, res) => {});
-export const getUserCart = asyncHandler(async (req, res) => {});
+export const updateUserAvatar = asyncHandler(async (req, res) => {
+  const avatarimagelocalpath = req.file?.path;
+  if (!avatarimagelocalpath) {
+    throw new ApiError(400, "Upload an picture to changeor modify");
+  }
+
+  const avatar = uploadOnCloudinary(avatarimagelocalpath);
+
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        avatar: avatar.url,
+      },
+    },
+    { new: true }
+  ).select("-password -refreshToken");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { user }, "Avatar succesfully updated"));
+});
+export const updateUserPassword = asyncHandler(async (req, res) => {
+  //conditions to update password
+  //Forgot password or change password
+  //1st case change password
+
+  if (isPasswordForgot) {
+    const { otp } = req.body;
+    const user = await User.findOne({ forgotPasswordToken: otp });
+    if (!user) {
+      throw new ApiError(400, "Wrong otp please enter correct otp");
+    }
+
+    user.isPasswordForgot = false;
+    user.forgotPasswordToken = undefined;
+
+    user.password = crypto.randomBytes(20).toString("hex");
+    sendNewPasswordtoUser(password, user.email);
+
+    user.save({ validateBeforeSave: false });
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          {},
+          "New Password generated succesfully sent to email"
+        )
+      );
+  } else {
+    const { oldPassword, newPassword, confPassword } = req.body;
+    if (!newPassword === confPassword) {
+      throw new ApiError(
+        400,
+        "New password is not equal to confirmed Password"
+      );
+    }
+
+    const user = await User.findById(req.user?._id);
+    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+    if (!isPasswordCorrect) {
+      throw new ApiError(400, "Old password is not correct");
+    }
+
+    user.password = newPassword;
+    await user.save({ validateBeforeSave: false });
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Password is succesfully updated"));
+  }
+  //2nd case forgot password
+});
+
+export const forgotPassword = asyncHandler(async (res, req) => {
+  const { email } = req.body;
+
+  if (!email) {
+    throw new ApiError(400, "Enter your email to proceed");
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(404, "User with following email does not exists");
+  }
+  user.isPasswordForgot = true;
+  user.forgotPasswordToken = crypto.randomBytes(20).toString("hex");
+
+  user.save({ validateBeforeSave: false });
+
+  forgotPasswordValidation(user.forgotPasswordToken, email);
+
+  return res
+    .status(200)
+    .json(new ApiError(200, {}, "Otp sent to email succesfully"));
+});
+
+export const getUserRestrauntDetails = asyncHandler(async (req, res) => {
+  const user = await User.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(req.user._id),
+      },
+    },
+    {
+      $lookup: {
+        from: "restraunts",
+        localField: "owner",
+        foreignField: "_id",
+        as: "Restraunts",
+      },
+    },
+  ]);
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        user[0].Restraunts,
+        "User Restarunts fetched Succesfully"
+      )
+    );
+});
+export const deleteUser = asyncHandler(async (req, res) => {
+  await User.findByIdAndDelete(req.user?._id);
+  res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "User Succesfully deleted"));
+});
+export const refreshAccesToken = asyncHandler(async (req, res) => {
+  try {
+    const incomingRefreshToken =
+      req.cookies.refreshToken || req.body.refreshToken;
+    if (!incomingRefreshToken) {
+      throw new ApiError(400, "Invalid refresh token");
+    }
+
+    const decodedToken = jwt.verify(incomingRefreshToken, RefreshTokenSecret);
+
+    const user = await User.findById(decodedToken?._id);
+
+    if (!user) {
+      throw new ApiError(400, "invalid refresh token");
+    }
+
+    if (user?.refreshToken !== decodedToken) {
+      throw new ApiError(401, "Refresh token expired or used");
+    }
+
+    const { accessToken, refreshToken } = await generateAccessandRefreshToken(
+      user.id
+    );
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
+      .json(new ApiResponse(200, {}, "new Access token generated"));
+  } catch (error) {
+    throw new ApiError(500, `Problem in generating refresh token${error}`);
+  }
+});
+export const getCurrentUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user?._id).select(
+    "-password -refreshToken"
+  );
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { user }, "User details fetched succesfully"));
+});
+export const getUserOrderHistory = asyncHandler(async (req, res) => {
+  const user = await User.aggregate([
+    {
+      $match: mongoose.Types.ObjectId(req._id),
+    },
+    {
+      $lookup: {
+        from: "orders",
+        localField: "owner",
+        foreignField: "_id",
+        as: "orders",
+        pipeline: [
+          {
+            $lookup: {
+              from: "fooditems",
+              localField: "_id",
+              foreignField: "items",
+              as: "food",
+              pipeline: [
+                {
+                  $project: {
+                    name: 1,
+                    photo: 1,
+                    price: 1,
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ]);
+  //!Wrong pipelines have to check later
+  res
+    .status(200)
+    .json(new ApiResponse(200, user, "User orders fetched Succesfully"));
+});
+export const getUserCart = asyncHandler(async (req, res) => {
+  const cart = await Cart.findOne({ owner: req.user?._id });
+
+  res.status(200).json(new ApiResponse(200, cart, "Cart Succesfully fetched"));
+});
 export const getUserFavouriteLists = asyncHandler(async (req, res) => {});
