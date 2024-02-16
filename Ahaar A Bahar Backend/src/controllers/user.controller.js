@@ -99,7 +99,7 @@ const forgotPasswordValidation = async (forgotPasswordToken, email) => {
     throw new ApiError(500, `Password forgot otp not sent retry: ${error}`);
   }
 };
-sendNewPasswordtoUser = async (password, email) => {
+const sendNewPasswordtoUser = async (password, email) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {

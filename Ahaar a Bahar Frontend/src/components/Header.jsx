@@ -31,13 +31,11 @@ const Header = () => {
             className="bg-white cursor-pointer"
             value={selectedoption}
             onChange={handleOptionChange}
-          >
+          />
             {options.map((opt, index) => (
               <option key={index} className="cursor-pointer">
                 {opt}
-              </option>
-
-  return (
+              </option>)
     <div className="flex justify-between">
       <div className="header-half flex justify-between">
         <img src="" alt="Ahaar A Bahar Icon" />
