@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+
 import SignIn from "./components/SignIn";
 import { useSelector } from "react-redux";
 
@@ -12,6 +13,7 @@ const Body = () => {
     <div>
       <Header />
       {togglemenu ? <SignIn /> : null}
+
       <Outlet />
       <Footer />
     </div>

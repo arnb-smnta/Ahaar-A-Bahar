@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { CiSearch } from "react-icons/ci";
 import { IoHelpBuoyOutline } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa";
@@ -6,12 +7,14 @@ import { FaOpencart } from "react-icons/fa";
 import { togglemenu } from "./reduxStore/isMenuopen";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+
 const Header = () => {
   const options = ["kolkata", "chennai", "bangalore", "delhi", "hydrebad"];
   const [selectedoption, setselectedoption] = useState(options[0]);
   const handleOptionChange = (e) => {
     setselectedoption(e.target.value);
   };
+
   const dispatch = useDispatch();
   return (
     <div className="header flex justify-between bg-white shadow-lg h-20 fixed w-[100%] -z-40">
@@ -33,6 +36,17 @@ const Header = () => {
               <option key={index} className="cursor-pointer">
                 {opt}
               </option>
+
+  return (
+    <div className="flex justify-between">
+      <div className="header-half flex justify-between">
+        <img src="" alt="Ahaar A Bahar Icon" />
+        <div>
+          <h2>Select your location </h2>
+          <select value={selectedoption} onChange={handleOptionChange}>
+            {options.map((opt, index) => (
+              <option key={index}>{opt}</option>
+
             ))}
           </select>
         </div>
@@ -60,8 +74,8 @@ const Header = () => {
             <FaOpencart className="h-6" />
             <h1 className="ml-2 font-medium text-gray-600">Cart</h1>
           </section>
-        </Link>
-      </div>
+        </Link/>
+     </div>
     </div>
   );
 };

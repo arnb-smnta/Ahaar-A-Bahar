@@ -1,41 +1,26 @@
-import { useEffect, useState } from "react";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import Body from "./Body";
+import Home from "./components/Home";
+import { Provider } from "react-redux";
+import appstore from "./components/reduxStore/appstore";
 
-import "./App.css";
-import axios from "axios";
-import { server } from "./utils/constants";
+const App = () => {
+  const approuter = createBrowserRouter([
+    {
+      path: "/",
+      element: <Body />,
+      children: [{ path: "/", element: <Home /> }],
+    },
+  ]);
 
-function App() {
-  const [jokes, setjokes] = useState([]);
-
-  useEffect(() => {
-    axios
-      .get(`${server}/jokes`)
-      .then((res) => {
-        setjokes(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-  console.log(jokes);
   return (
-    <>
-      <div>
-        <h1>List of Jokes</h1>
-        {jokes.length}
-        {jokes.length
-          ? jokes.map((joke, index) => {
-              return (
-                <div key={index}>
-                  <h1>{joke.author}</h1>
-                  <h2>{joke.jokes}</h2>
-                </div>
-              );
-            })
-          : null}
-      </div>
-    </>
+    <div>
+      <Provider store={appstore}>
+        <>
+          <RouterProvider router={approuter}></RouterProvider>
+        </>
+      </Provider>
+    </div>
   );
-}
-
+};
 export default App;
