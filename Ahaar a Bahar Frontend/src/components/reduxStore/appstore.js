@@ -4,4 +4,5 @@ const appstore = configureStore({
   reducer: {
     isMenuopen: isMenuOpenreducer,
   },
+});
 export default appstore;

@@ -3,13 +3,20 @@ import Body from "./Body";
 import Home from "./components/Home";
 import { Provider } from "react-redux";
 import appstore from "./components/reduxStore/appstore";
+import Cart from "./components/Cart";
 
 const App = () => {
   const approuter = createBrowserRouter([
     {
       path: "/",
       element: <Body />,
-      children: [{ path: "/", element: <Home /> }],
+      children: [
+        { path: "/", element: <Home /> },
+        {
+          path: "/cart",
+          element: <Cart />,
+        },
+      ],
     },
   ]);
 

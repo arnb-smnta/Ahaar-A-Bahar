@@ -31,25 +31,15 @@ const Header = () => {
             className="bg-white cursor-pointer"
             value={selectedoption}
             onChange={handleOptionChange}
-          />
+          >
             {options.map((opt, index) => (
               <option key={index} className="cursor-pointer">
                 {opt}
-              </option>)
-    <div className="flex justify-between">
-      <div className="header-half flex justify-between">
-        <img src="" alt="Ahaar A Bahar Icon" />
-        <div>
-          <h2>Select your location </h2>
-          <select value={selectedoption} onChange={handleOptionChange}>
-            {options.map((opt, index) => (
-              <option key={index}>{opt}</option>
-
+              </option>
             ))}
           </select>
         </div>
       </div>
-
       <div className="header-secondhalf flex justify-between w-[50%] pt-8 pr-60">
         <section className="flex cursor-pointer">
           <CiSearch className="h-6" />{" "}
@@ -72,8 +62,8 @@ const Header = () => {
             <FaOpencart className="h-6" />
             <h1 className="ml-2 font-medium text-gray-600">Cart</h1>
           </section>
-        </Link/>
-     </div>
+        </Link>
+      </div>
     </div>
   );
 };
