@@ -58,7 +58,7 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    order: [{ type: Schema.Types.ObjectId }],
+    orders: [{ type: Schema.Types.ObjectId }],
     address: [
       {
         name: String,

@@ -169,7 +169,8 @@ export const toogleRestrauntIsOpen = asyncHandler(async (req, res) => {
 });
 export const getRestrauntDetails = asyncHandler(async (req, res) => {
   const { restraunt_id } = req.params;
-  const restraunt = await Restraunt.findById(restraunt_id).select("-owner");
+  const restraunt = await Restraunt.findById(restraunt_id).select("-owner"); //! Have to add pipelines to fetch the food items to
+  //!also add food item review and price
 
   if (!restraunt) {
     throw new ApiError(404, "restraunt not found");

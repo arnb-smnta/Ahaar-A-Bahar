@@ -322,7 +322,7 @@ export const updateForgotPassowrd = asyncHandler(async (req, res) => {
     user.password = crypto.randomBytes(20).toString("hex");
     sendNewPasswordtoUser(user.password, user.email);
 
-    user.save({ validateBeforeSave: false });
+    await user.save({ validateBeforeSave: false });
 
     res
       .status(200)
