@@ -17,7 +17,7 @@ const Header = () => {
 
   const dispatch = useDispatch();
   return (
-    <div className="header flex justify-between bg-white shadow-lg h-20 fixed w-[100%] -z-40">
+    <div className="header  flex justify-between bg-white shadow-lg h-20 fixed w-[100%] -z-40">
       <div className="header-half flex justify-between w-[50%] pl-[20%] pr-[20%]">
         <Link to="/">
           <img

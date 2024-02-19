@@ -13,8 +13,19 @@ cloudinary.config({
 });
 
 const uploadOnCloudinary = async (localfilepath) => {
+  cloudinary.api.ping((error, result) => {
+    if (error) {
+      console.error("Error testing Cloudinary configuration:", error);
+    } else {
+      console.log("Cloudinary is configured properly!");
+      console.log("Cloudinary API response:", result);
+    }
+  });
+
   try {
-    if (!localfilepath) return null;
+    if (!localfilepath) {
+      return null;
+    }
     //upload the file on cloudinary
 
     const response = await cloudinary.uploader.upload(localfilepath, {
@@ -22,7 +33,7 @@ const uploadOnCloudinary = async (localfilepath) => {
     });
 
     //filehas been uploaded succesfully
-    console.log("file is uploaded on cloudinary succesfull", response);
+    //console.log("file is uploaded on cloudinary succesfull", response);
     fs.unlinkSync(localfilepath); //removing the local file path as the file is uploaded succesfully
     return response;
   } catch (error) {

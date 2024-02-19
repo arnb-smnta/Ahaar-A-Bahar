@@ -7,10 +7,12 @@ import SignIn from "./components/SignIn";
 import { useSelector } from "react-redux";
 
 const Body = () => {
-  const togglemenu = useSelector((appstore) => appstore.isMenuopen);
+  const togglemenu = useSelector(
+    (appstore) => appstore.isMenuopen.createAccountMenu
+  );
 
   return (
-    <div>
+    <div className="">
       <Header />
       {togglemenu ? <SignIn /> : null}
 

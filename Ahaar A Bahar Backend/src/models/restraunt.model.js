@@ -7,6 +7,10 @@ const restrauntSchema = new Schema(
       ref: "User",
       required: true,
     },
+    name: {
+      type: String,
+      required: true,
+    },
     description: {
       type: String,
       trim: true,
@@ -26,6 +30,7 @@ const restrauntSchema = new Schema(
       type: Boolean,
       default: true,
     },
+    photos: [{ type: String }],
   },
   { timestamps: true }
 );

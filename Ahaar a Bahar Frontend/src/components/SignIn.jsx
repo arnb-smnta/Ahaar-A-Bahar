@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import { useDispatch } from "react-redux";
-import { togglemenu } from "./reduxStore/isMenuopen";
+import { toggleforgotPasswordMenu, togglemenu } from "./reduxStore/isMenuopen";
 const SignIn = () => {
   const [phonenumber, setphonenumber] = useState("");
   const [email, setemail] = useState("");
   const [fullName, setfullName] = useState("");
   const [signupMenuToggle, setsignupMenuToggle] = useState(false);
+
   const submit = (e) => {
     e.preventDefault();
   };
@@ -51,6 +52,8 @@ const SignIn = () => {
             placeholder="Phone number"
             className="border border-gray-300  h-20 pb-8 pl-4 w-[50%] font-semibold "
           />
+
+          <input type="text" placeholder="Password" />
           {signupMenuToggle ? (
             <div>
               {" "}
@@ -82,6 +85,9 @@ const SignIn = () => {
             >
               {signupMenuToggle ? "CONTINUE" : "LOGIN"}
             </button>
+          </section>
+          <section className="mt-2">
+            <p className="text-orange-600 cursor-pointer">Forgot Password ?</p>
           </section>
         </section>
       </div>

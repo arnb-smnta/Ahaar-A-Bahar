@@ -11,6 +11,7 @@ import {
   logoutUser,
   refreshAccesToken,
   registerUser,
+  updateForgotPassowrd,
   updateUserAvatar,
   updateUserPassword,
   verifyAccount,
@@ -20,21 +21,21 @@ import { getFavouriteList } from "../controllers/favouriteList.controller.js";
 
 const router = Router();
 
-router.route("/register").post(multerupload.single("avatar"), registerUser); //done
-router.route("/verify/:token").get(verifyAccount); //done
-router.route("/login").post(loginUser); //done
-router.route("/logout").post(jwtVerify, logoutUser); //done
-router.route("/refreshAccessToken").post(refreshAccesToken); //done
-router.route("/change-password").post(jwtVerify, updateUserPassword); //done
-router.route("/forgot-password").post(forgotPassword); //done
-router.route("/update-forgotPassword").post(updateUserPassword); //done
+router.route("/register").post(multerupload.single("avatar"), registerUser); //working
+router.route("/verify/:token").get(verifyAccount); //working
+router.route("/login").post(loginUser); //working
+router.route("/logout").post(jwtVerify, logoutUser); //working
+router.route("/refreshAccessToken").post(refreshAccesToken); // checked
+router.route("/change-password").post(jwtVerify, updateUserPassword); //checked
+router.route("/forgot-password").post(forgotPassword); //checked
+router.route("/update-forgotPassword").post(updateForgotPassowrd); //checked
 router
   .route("/update-avatar")
-  .patch(jwtVerify, multerupload.single("avatar"), updateUserAvatar); //done
+  .patch(jwtVerify, multerupload.single("avatar"), updateUserAvatar); //checked
 router.route("/user-restraunt").get(jwtVerify, getUserRestrauntDetails);
 router.route("/order-history").get(jwtVerify, getUserOrderHistory);
-router.route("/delete").delete(jwtVerify, deleteUser); //done
-router.route("/current-user").get(jwtVerify, getCurrentUser); //done
+router.route("/delete").delete(jwtVerify, deleteUser); //checked
+router.route("/current-user").get(jwtVerify, getCurrentUser); //checked
 router.route("/get-usercart").get(jwtVerify, getUserCart);
 router.route("/get-favouritelists").get(jwtVerify, getFavouriteList);
 
