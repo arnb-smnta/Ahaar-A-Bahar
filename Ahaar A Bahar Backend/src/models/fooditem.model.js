@@ -25,7 +25,7 @@ const fooditemSchema = new Schema(
       ref: "Restraunt",
       required: true,
     },
-    cuisines: { type: String },
+    cuisine: { type: String },
     price: {
       type: Number,
       required: true,

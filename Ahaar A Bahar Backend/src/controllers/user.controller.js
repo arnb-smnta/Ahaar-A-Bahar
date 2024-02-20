@@ -422,7 +422,7 @@ export const deleteUser = asyncHandler(async (req, res) => {
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
     .json(new ApiResponse(200, {}, "User Succesfully deleted"));
-}); //! has to delete users restraunts and the restraunts food items
+}); //! has to delete users restraunts and the restraunts food items and food items reviews comments and also the user orders cart
 export const refreshAccesToken = asyncHandler(async (req, res) => {
   try {
     const incomingRefreshToken =
