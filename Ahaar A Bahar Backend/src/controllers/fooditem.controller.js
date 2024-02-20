@@ -13,15 +13,19 @@ export const createFoodItem = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Restraunt not found incorrect restraunt id");
   }
 
-  if (!(name || description || cuisine || price)) {
+  if (
+    [name, description, cuisine, price].some((s) =>
+      s === null || s === undefined ? true : s.trim() === ""
+    )
+  ) {
     throw new ApiError(400, "All the fields are required");
   }
 
-  if (restraunt.owner.toString() !== req.user._id) {
+  if (restraunt.owner.toString() !== req.user._id.toString()) {
     throw new ApiError(401, "You ar not the owner of this restraunt");
   }
   //cloudinary handles the null case
-  let imageurl = uploadOnCloudinary(req.file.path);
+  let imageurl = await uploadOnCloudinary(req.file?.path);
 
   const fooditem = await Fooditem.create({
     name,
@@ -58,8 +62,8 @@ export const updateFoodItemDetails = asyncHandler(async (req, res) => {
       "You are not authorised to update details of this fooditem"
     );
   }
-
-  if (!(name && description && cuisine)) {
+  console.log(name);
+  if (!name && !description && !cuisine) {
     throw new ApiError(400, "Modify something to update");
   }
 
@@ -73,10 +77,11 @@ export const updateFoodItemDetails = asyncHandler(async (req, res) => {
   if (cuisine) {
     updatedfields.cuisine = cuisine;
   }
+  console.log(updatedfields);
   const updateditem = await Fooditem.findByIdAndUpdate(
     fooditem_id,
     {
-      $set: { updatedfields },
+      $set: updatedfields,
     },
     { new: true }
   );
@@ -121,7 +126,7 @@ export const fooditemPriceupdate = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiError(200, updateditem, "Price succesfully updated"));
+    .json(new Response(200, updateditem, "Price succesfully updated"));
 });
 export const updateFoodItemPhoto = asyncHandler(async (req, res) => {
   const { fooditem_id } = req.params;
@@ -158,6 +163,7 @@ export const updateFoodItemPhoto = asyncHandler(async (req, res) => {
   if (!updateditem) {
     throw new ApiError(500, "Photo not uploaded");
   }
+  console.log(fooditem.photo);
 
   await deleteOnCloudinary(fooditem.photo);
 
@@ -181,14 +187,18 @@ export const toggleisAvailable = asyncHandler(async (req, res) => {
     );
   }
 
-  const updateditem = await Fooditem.findByIdAndUpdate(fooditem_id, {
-    $set: { isAvailable: !fooditem.isAvailable },
-  });
+  const updateditem = await Fooditem.findByIdAndUpdate(
+    fooditem_id,
+    {
+      $set: { isAvailable: !fooditem.isAvailable },
+    },
+    { new: true }
+  );
   if (!updateditem) {
     throw new ApiError(500, " is available not updated");
   }
 
-  return res.status(new ApiResponse(200, updateditem, ""));
+  return res.status(200).json(new ApiResponse(200, updateditem, ""));
 });
 export const deleteFoodItem = asyncHandler(async (req, res) => {
   const { fooditem_id } = req.params;
@@ -208,7 +218,7 @@ export const deleteFoodItem = asyncHandler(async (req, res) => {
   await Fooditem.findByIdAndDelete(fooditem_id);
 
   const deleteditem = await Fooditem.findById(fooditem_id);
-
+  //!have to add pipelines to delete comments and reviews
   if (deleteditem) {
     throw new ApiError(500, "item not deleted");
   }

@@ -44,6 +44,15 @@ const uploadOnCloudinary = async (localfilepath) => {
   }
 };
 const deleteOnCloudinary = async (cloudinaryUrl, mediatype = "image") => {
+  cloudinary.api.ping((error, result) => {
+    if (error) {
+      console.error("Error testing Cloudinary configuration:", error);
+    } else {
+      console.log("Cloudinary is configured properly!");
+      console.log("Cloudinary API response:", result);
+    }
+  });
+  console.log(cloudinaryUrl);
   try {
     if (!cloudinaryUrl) return null;
     //to delete video type media we have to explicitly mention it on controller

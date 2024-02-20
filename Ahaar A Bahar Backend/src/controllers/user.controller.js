@@ -168,7 +168,7 @@ export const registerUser = asyncHandler(async (req, res) => {
   /*if (true) {
     throw new ApiError(400, "physical error");
   }*/
-  const avatar = await uploadOnCloudinary(req.file.path);
+  const avatar = await uploadOnCloudinary(req.file?.path);
   console.log(avatar);
   const verificationToken = crypto.randomBytes(20).toString("hex");
   try {
@@ -185,7 +185,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     username: username.toLowerCase(),
     email,
     mobile,
-    avatar: avatar.url || "",
+    avatar: avatar?.url || "",
     password,
     verificationToken,
   });
@@ -422,7 +422,7 @@ export const deleteUser = asyncHandler(async (req, res) => {
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
     .json(new ApiResponse(200, {}, "User Succesfully deleted"));
-});
+}); //! has to delete users restraunts and the restraunts food items
 export const refreshAccesToken = asyncHandler(async (req, res) => {
   try {
     const incomingRefreshToken =
