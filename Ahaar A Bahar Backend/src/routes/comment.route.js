@@ -2,16 +2,21 @@ import { Router } from "express";
 
 import {
   createComment,
+  createReply,
   deleteComment,
-  getFoodItemComments,
+  getComment,
   updateComment,
 } from "../controllers/comment.controller.js";
+import { jwtVerify } from "../middlewares/auth.middleware.js";
 
 const router = Router();
+router.route("/create-comment/:fooditem_id").post(jwtVerify, createComment);
+
 router
-  .route("/create-comment/:fooditem_id")
-  .post(createComment)
-  .get(getFoodItemComments);
-router.route("/c/:comment_id").delete(deleteComment).patch(updateComment);
+  .route("/c/:comment_id")
+  .delete(jwtVerify, deleteComment)
+  .patch(jwtVerify, updateComment)
+  .get(getComment)
+  .post(jwtVerify, createReply);
 
 export default router;

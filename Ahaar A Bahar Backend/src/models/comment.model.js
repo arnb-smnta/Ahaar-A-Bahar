@@ -5,6 +5,7 @@ const commentSchema = new Schema(
     owner: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
     content: {
       type: String,
@@ -14,6 +15,10 @@ const commentSchema = new Schema(
     fooditem: {
       type: Schema.Types.ObjectId,
       ref: "Fooditem",
+    },
+    reply: {
+      type: Schema.Types.ObjectId,
+      ref: "Comment",
     },
   },
   { timestamps: true }
