@@ -7,8 +7,10 @@ import {
 
 const router = Router();
 
-router.route("/create-review").post(jwtVerify, createReview);
+router
+  .route("/create-review/:fooditem_id")
+  .post(jwtVerify, createReview, updateReview);
 
-router.route("/update-review/:review_id").patch(jwtVerify, updateReview);
+//router.route("/update-review/:review_id").patch(jwtVerify, updateReview);
 
 export default router;

@@ -75,7 +75,7 @@ export const deleteComment = asyncHandler(async (req, res) => {
     );
   }
 
-  await Comment.findByIdAndDelete(comment_id);
+  await Comment.findByIdAndDelete(comment_id); //!delete the replies also if present
 
   const deleteComment = await Comment.findById(comment_id);
 
@@ -114,7 +114,7 @@ export const updateComment = asyncHandler(async (req, res) => {
     { new: true }
   );
 
-  if (updatedComment) {
+  if (!updatedComment) {
     throw new ApiError(
       500,
       "internal server error Comment not updated try again"
@@ -134,5 +134,5 @@ export const getComment = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiError(200, comment, "Comment fetched succesfully"));
+    .json(new ApiResponse(200, comment, "Comment fetched succesfully"));
 });
