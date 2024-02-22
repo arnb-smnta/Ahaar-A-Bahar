@@ -1,95 +1,71 @@
 import React, { useState } from "react";
-import { RxCross1 } from "react-icons/rx";
-import { useDispatch } from "react-redux";
-import { toggleforgotPasswordMenu, togglemenu } from "./reduxStore/isMenuopen";
+import { Link } from "react-router-dom";
+import { FaRegEye } from "react-icons/fa6";
 const SignIn = () => {
-  const [phonenumber, setphonenumber] = useState("");
   const [email, setemail] = useState("");
-  const [fullName, setfullName] = useState("");
-  const [signupMenuToggle, setsignupMenuToggle] = useState(false);
-
-  const submit = (e) => {
+  const [password, setpassword] = useState("");
+  const tologin = (e) => {
     e.preventDefault();
+    console.log(email, password);
   };
-  const dispatch = useDispatch();
   return (
-    <div className="Sign-InPage w-[40%] h-screen bg-white ml-auto ">
-      <RxCross1
-        className="h-8 cursor-pointer"
-        onClick={() => dispatch(togglemenu())}
-      />
-      <div className="pt-[6%] pl-[4%]">
-        <section className="flex">
-          <section>
-            <h1 className="text-3xl">
-              {signupMenuToggle ? "Sign up" : "Login"}
-            </h1>
-
-            <h3 className="flex pt-[1%]">
-              <p>or</p>{" "}
-              <p
-                className="text-orange-600 ml-3 cursor-pointer"
-                onClick={() => setsignupMenuToggle(!signupMenuToggle)}
-              >
-                {signupMenuToggle
-                  ? "login to your account"
-                  : "create an account"}
-              </p>
-            </h3>
-          </section>
-          <img
-            className="ml-[15%] h-25"
-            src="https://lh3.googleusercontent.com/fkl-xPLhzKBh82eUVOYCYawRXXx63hQmBlkUItOs-S-soYasB2MluHerrVkpMYz3JlAg=s85"
-            alt="bocadillo"
-          />
-        </section>
-
-        <section className="mt-[10%]">
-          <input
-            value={phonenumber}
-            onChange={(e) => setphonenumber(e.target.value)}
-            type="text"
-            placeholder="Phone number"
-            className="border border-gray-300  h-20 pb-8 pl-4 w-[50%] font-semibold "
-          />
-
-          <input type="text" placeholder="Password" />
-          {signupMenuToggle ? (
+    <div className="bg-gray-100 h-screen flex items-center justify-center">
+      <div className="sm:flex sm:justify-center sm:items-center  w-[80%]  h-[100%] pt-10">
+        <div className="Logoclass  mr-8">
+          <h1 className="sm:text-8xl text-blue-600 font-extrabold text-4xl mb-4 ">
+            Ahaar A Bahar
+          </h1>
+          <p className="sm:text-4xl text-2xl mb-4">
+            Ahaar A Bahar help you find worlds most delicious delicacies
+          </p>
+        </div>
+        <div className=" sm:h-[40%] sm:w-[30%] w-[100%]  text-center bg-white pt-10 shadow-lg rounded-lg">
+          <form action="">
             <div>
-              {" "}
-              <section className="mt-">
+              <div className="mb-4">
                 <input
-                  value={fullName}
-                  onChange={(e) => setfullName(e.target.value)}
                   type="text"
-                  placeholder="Name"
-                  className="border border-gray-300  h-20 pb-8 pl-4 w-[50%] font-semibold "
-                />
-              </section>
-              <section>
-                <input
+                  name=""
+                  id=""
                   value={email}
                   onChange={(e) => setemail(e.target.value)}
-                  type="text"
-                  placeholder="Email"
-                  className="border border-gray-300  h-20 pb-8 pl-4 w-[50%] font-semibold "
+                  placeholder="Email address or phone number "
+                  className="border border-gray-300 h-12 w-[90%] text-2xl text-center "
                 />
-              </section>
+              </div>
+              <div>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setpassword(e.target.value)}
+                  placeholder="Password"
+                  className="border border-gray-300 h-12  text-2xl text-center w-[90%] "
+                />
+                {/*<FaRegEye className="w-[10%]" />*/}
+              </div>
             </div>
-          ) : null}
 
-          <section className="mt-[5%]">
             <button
-              className="bg-orange-600 text-white w-[50%] h-[45px] font-bold "
-              onClick={submit}
+              type="button"
+              className="h-12 w-[90%] bg-blue-600 mt-4 rounded-md text-white text-2xl font-extrabold"
+              onClick={tologin}
             >
-              {signupMenuToggle ? "CONTINUE" : "LOGIN"}
+              Log In
             </button>
-          </section>
-          <section className="mt-2">
-            <p className="text-orange-600 cursor-pointer">Forgot Password ?</p>
-          </section>
-        </section>
+          </form>
+
+          <Link to="/forgot-password">
+            <p className="mt-4 text-xl text-blue-600 hover:cursor-pointer">
+              Forgotten password ?
+            </p>
+          </Link>
+
+          <Link to="/create-account">
+            <button className="sm:mt-20 mt-10 bg-green-500 w-[50%] rounded-lg text-white text-2xl font-extrabold h-16">
+              Create new Account
+            </button>
+          </Link>
+        </div>
       </div>
     </div>
   );

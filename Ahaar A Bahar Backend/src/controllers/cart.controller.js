@@ -65,5 +65,9 @@ export const deleteIteminCart = asyncHandler(async (req, res) => {
 
   const cart = await Cart.findOne({ owner: req.user._id });
   const item = await Fooditem.findById(item_id);
+
+
+
+  
 });
 export const updateCartOnRestrauntChange = asyncHandler(async (req, res) => {});

@@ -10,13 +10,13 @@ import {
 import { jwtVerify } from "../middlewares/auth.middleware.js";
 
 const router = Router();
-router.route("/create-comment/:fooditem_id").post(jwtVerify, createComment);
+router.route("/create-comment/:fooditem_id").post(jwtVerify, createComment);//checked postman
 
 router
   .route("/c/:comment_id")
   .delete(jwtVerify, deleteComment)
-  .patch(jwtVerify, updateComment)
-  .get(getComment)
-  .post(jwtVerify, createReply);
+  .patch(jwtVerify, updateComment)//checked postman
+  .get(getComment)//checke dpostman
+  .post(jwtVerify, createReply);//checked postman
 
 export default router;

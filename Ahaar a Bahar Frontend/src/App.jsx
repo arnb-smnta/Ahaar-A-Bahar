@@ -4,16 +4,30 @@ import Home from "./components/Home";
 import { Provider } from "react-redux";
 import appstore from "./components/reduxStore/appstore";
 import Cart from "./components/Cart";
-
+import SignIn from "./components/SignIn";
+import Register from "./components/Register";
+import ForgotPassword from "./components/ForgotPassword";
 const App = () => {
   const approuter = createBrowserRouter([
     {
       path: "/",
+      element: <SignIn />,
+    },
+    {
+      path: "/create-account",
+      element: <Register />,
+    },
+    {
+      path: "/forgot-password",
+      element: <ForgotPassword />,
+    },
+    {
+      path: "/in",
       element: <Body />,
       children: [
-        { path: "/", element: <Home /> },
+        { path: "/in", element: <Home /> },
         {
-          path: "/cart",
+          path: "/in/cart",
           element: <Cart />,
         },
       ],
