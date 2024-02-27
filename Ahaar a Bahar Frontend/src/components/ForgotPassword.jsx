@@ -7,7 +7,7 @@ const ForgotPassword = () => {
     e.preventDefault();
   };
   return (
-    <div className="bg-gray-200 h-screen w-[100%] flex justify-center items-center shadow-2xl">
+    <div className="bg-gray-200 sm:h-[1200px] h-screen w-[100%] sm:w-[2400px] flex justify-center items-center shadow-2xl">
       <div className="sm:w-[30%] sm:h-[30%] h-[40%] bg-white rounded-sm">
         <section className="border border-b-4">
           <h1 className="text-4xl font-serif font-extrabold p-4 pb-6 ">
@@ -37,7 +37,7 @@ const ForgotPassword = () => {
             </button>
           </Link>
           <button
-            className="bg-blue-600 text-white w-[20%] sm:h-8 h-12 rounded-lg px-1"
+            className="bg-blue-600 text-white w-[20%] sm:h-12 h-12 rounded-lg px-1"
             onClick={resetpassword}
           >
             Reset Password

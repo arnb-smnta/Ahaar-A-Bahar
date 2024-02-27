@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import jwt from "jsonwebtoken";
+import fs from "fs";
 import {
   RefreshTokenSecret,
   email_pass,
@@ -61,7 +62,7 @@ const sendVerificationEmail = async (email, verificationtoken) => {
   const mailoptions = {
     from: "Ahaar A Bahar", // sender address
     to: email, // list of receivers
-    subject: "Email verufication of Ahaar A Bahar", // Subject line
+    subject: "Email verification of Ahaar A Bahar", // Subject line
     text: `Please Click the following link to verify your email -http://localhost:${envport}/api/v1/users/verify/${verificationtoken}`, // plain text body
   };
 
@@ -131,13 +132,17 @@ export const registerUser = asyncHandler(async (req, res) => {
 
   //validations
 
+  let avatarimagelocalpath = req.file?.path;
+  console.log(req.file);
   if (
     [fullname, email, username, mobile, password].some((s) => s?.trim() === "")
   ) {
+    fs.unlinkSync(avatarimagelocalpath);
     throw new ApiError(400, "All the fields are required");
   }
 
   if (!validemail(email)) {
+    fs.unlinkSync(avatarimagelocalpath);
     throw new ApiError(400, "Not a valid email");
   }
 
@@ -146,15 +151,17 @@ export const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (existeduser) {
+    fs.unlinkSync(avatarimagelocalpath);
     throw new ApiError(400, "User with same username , email or mobile exists");
   }
+
   if (!isStrongPassword(password)) {
+    fs.unlinkSync(avatarimagelocalpath);
     throw new ApiError(
       400,
       "Enter a strong password with atleast 1 special character and two Capital letters"
     );
   }
-  let avatarimagelocalpath;
 
   /*if (
     req.files &&
@@ -163,22 +170,13 @@ export const registerUser = asyncHandler(async (req, res) => {
   ) {
     avatarimagelocalpath = req.files.avatarImage[0].path;
   }*/
-  console.log(req.file);
-  console.log(avatarimagelocalpath);
+
   /*if (true) {
     throw new ApiError(400, "physical error");
   }*/
   const avatar = await uploadOnCloudinary(req.file?.path);
   console.log(avatar);
   const verificationToken = crypto.randomBytes(20).toString("hex");
-  try {
-    await sendVerificationEmail(email, verificationToken);
-  } catch (error) {
-    throw new ApiError(
-      500,
-      "User verification mail not sent hence unregisterd"
-    );
-  }
 
   const user = await User.create({
     fullname,
@@ -199,7 +197,14 @@ export const registerUser = asyncHandler(async (req, res) => {
       "internal Server Error something went wrong while creating user"
     );
   }
-
+  try {
+    await sendVerificationEmail(email, verificationToken);
+  } catch (error) {
+    throw new ApiError(
+      500,
+      "User verification mail not sent hence unregisterd"
+    );
+  }
   //Sending verification email to user via node mailer
 
   return res
@@ -208,7 +213,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 });
 export const loginUser = asyncHandler(async (req, res) => {
   const { email, username, mobile, password } = req.body;
-
+  console.log(req.body);
   if (!email && !username && !mobile) {
     throw new ApiError(400, "Atleast provide one unique field to login");
   }
@@ -216,16 +221,15 @@ export const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({
     $or: [{ username }, { email }, { mobile }],
   });
-
+  console.log(user);
+  if (!user) {
+    throw new ApiError(401, "Invalid login credentials user does not exists");
+  }
   if (!user.verified) {
     throw new ApiError(
       400,
       "You have not verified your email address please verify and re-login "
     );
-  }
-
-  if (!user) {
-    throw new ApiError(401, "Invalid login credentials user does not exists");
   }
 
   const isPasswordValid = await user.isPasswordCorrect(password);

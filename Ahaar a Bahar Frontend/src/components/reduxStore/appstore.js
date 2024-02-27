@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import isMenuOpenreducer from "./isMenuopen";
+import dataSlice from "./data.slice";
 const appstore = configureStore({
   reducer: {
-    isMenuopen: isMenuOpenreducer,
+    data: dataSlice,
   },
 });
 export default appstore;

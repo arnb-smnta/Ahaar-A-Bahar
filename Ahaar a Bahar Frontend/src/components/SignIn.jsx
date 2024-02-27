@@ -1,15 +1,37 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { FaRegEye } from "react-icons/fa6";
+import { Link, Navigate } from "react-router-dom";
+import { FaRegEye, FaS } from "react-icons/fa6";
+import axios from "axios";
+import { Backend_server } from "../utils/envFiles";
 const SignIn = () => {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const [login, setlogin] = useState(false);
+
   const tologin = (e) => {
     e.preventDefault();
-    console.log(email, password);
+
+    const jsondata = {
+      email,
+      password,
+    };
+    axios
+      .post(`${Backend_server}/users/login`, jsondata)
+      .then((result) => {
+        console.log("Response", result);
+        setemail("");
+        setpassword("");
+        setlogin(true);
+      })
+      .catch((err) => {
+        console.log("error", err);
+      });
   };
-  return (
-    <div className="bg-gray-100 h-screen flex items-center justify-center">
+
+  return login ? (
+    <Navigate to="/create-account" />
+  ) : (
+    <div className="bg-gray-100 h-screen sm:h-[1200px] w-screen flex items-center justify-center">
       <div className="sm:flex sm:justify-center sm:items-center  w-[80%]  h-[100%] pt-10">
         <div className="Logoclass  mr-8">
           <h1 className="sm:text-8xl text-blue-600 font-extrabold text-4xl mb-4 ">

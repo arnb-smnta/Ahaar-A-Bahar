@@ -7,7 +7,6 @@ const Body = () => {
   return (
     <div className="">
       <Header />
-
       <Outlet />
       <Footer />
     </div>

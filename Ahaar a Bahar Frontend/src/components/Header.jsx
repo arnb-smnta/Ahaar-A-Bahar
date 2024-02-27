@@ -4,8 +4,7 @@ import { CiSearch } from "react-icons/ci";
 import { IoHelpBuoyOutline } from "react-icons/io5";
 import { FaRegUser } from "react-icons/fa";
 import { FaOpencart } from "react-icons/fa";
-import { togglemenu } from "./reduxStore/isMenuopen";
-import { useDispatch } from "react-redux";
+
 import { Link } from "react-router-dom";
 
 const Header = () => {
@@ -15,9 +14,8 @@ const Header = () => {
     setselectedoption(e.target.value);
   };
 
-  const dispatch = useDispatch();
   return (
-    <div className="header  flex justify-between bg-white shadow-lg h-20 fixed w-[100%] -z-40">
+    <div className="header  flex justify-between bg-white shadow-lg sm:h-20 fixed min-w-[1800px] w-screen  ">
       <div className="header-half flex justify-between w-[50%] pl-[20%] pr-[20%]">
         <Link to="/">
           <img
@@ -49,10 +47,7 @@ const Header = () => {
           <IoHelpBuoyOutline className="h-6" />
           <h1 className="ml-2 font-medium text-gray-600">Help</h1>
         </section>
-        <section
-          className="flex cursor-pointer"
-          onClick={() => dispatch(togglemenu())}
-        >
+        <section className="flex cursor-pointer">
           <FaRegUser className="h-6" />
           <h1 className="ml-2 font-medium text-gray-600">Sign In</h1>
         </section>

@@ -7,6 +7,8 @@ import Cart from "./components/Cart";
 import SignIn from "./components/SignIn";
 import Register from "./components/Register";
 import ForgotPassword from "./components/ForgotPassword";
+import User from "./components/User";
+import CusinePage from "./components/CusinePage";
 const App = () => {
   const approuter = createBrowserRouter([
     {
@@ -21,6 +23,7 @@ const App = () => {
       path: "/forgot-password",
       element: <ForgotPassword />,
     },
+    { path: "/user", element: <User /> },
     {
       path: "/in",
       element: <Body />,
@@ -29,6 +32,10 @@ const App = () => {
         {
           path: "/in/cart",
           element: <Cart />,
+        },
+        {
+          path: "/in/cuisine/collections/:cuisineType/*",
+          element: <CusinePage />,
         },
       ],
     },
