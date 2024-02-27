@@ -9,7 +9,29 @@ import Register from "./components/Register";
 import ForgotPassword from "./components/ForgotPassword";
 import User from "./components/User";
 import CusinePage from "./components/CusinePage";
+import "./App.css";
+import RestaurantCard from "./components/secondaryComponents/RestaurantCard";
+import Restaurant from "./components/Restaurant";
 const App = () => {
+  let scrollContainer = document.querySelector(".toprestaurant");
+  let backbtn = document.querySelector(".arrowleft");
+  let nextbtn = document.querySelector(".arrowright");
+  if (scrollContainer !== null) {
+    scrollContainer.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      scrollContainer.scrollLeft += e.deltaY;
+    });
+
+    nextbtn.addEventListener("click", () => {
+      scrollContainer.style.scrollBehaviour = "smooth";
+      scrollContainer.scrollLeft -= 350;
+    });
+
+    backbtn.addEventListener("click", () => {
+      scrollContainer.style.scrollBehaviour = "smooth";
+      scrollContainer.scrollLeft += 350;
+    });
+  }
   const approuter = createBrowserRouter([
     {
       path: "/",
@@ -36,6 +58,10 @@ const App = () => {
         {
           path: "/in/cuisine/collections/:cuisineType/*",
           element: <CusinePage />,
+        },
+        {
+          path: "/in/restaurant/:res_id",
+          element: <Restaurant />,
         },
       ],
     },
