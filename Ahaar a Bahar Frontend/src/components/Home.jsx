@@ -16,7 +16,6 @@ const Home = () => {
       axios
         .get(DelhiMorn)
         .then((result) => {
-          console.log("HomePage", result);
           dispatch(addHomePageData(result.data));
         })
         .catch((err) => {

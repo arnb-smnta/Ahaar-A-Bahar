@@ -1,3 +1,11 @@
 .toprestaurant::-webkit-scrollbar {
   display: none;
 }
+.scroll-item {
+  will-change: transform;
+  transition: transform 0.3s ease-in-out;
+}
+
+.scroll-item:hover {
+  transform: scale(1.05); /* Adjust the scaling factor as needed */
+}

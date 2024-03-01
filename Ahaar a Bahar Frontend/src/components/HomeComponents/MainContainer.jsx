@@ -9,11 +9,13 @@ const MainContainer = () => {
     restaurantItems.data.cards[4].card.card.gridElements.infoWithStyle
       .restaurants.length;*/
   return restaurantItems ? (
-    <div className="shadow-xl min-h-[400px]">
+    <div className="shadow-xl my-4">
       <div>
-        <h1>{restaurantItems.data.cards[2].card.card.title}</h1>
+        <h1 className="text-3xl font-bold font-serif">
+          {restaurantItems.data.cards[2].card.card.title}
+        </h1>
       </div>
-      <div className="flex flex-wrap max-h-[400px]">
+      <div className="flex flex-wrap">
         {restaurantItems.data.cards[4].card.card.gridElements.infoWithStyle.restaurants.map(
           (item) => (
             <Link key={item.info.id} to={`/in/restaurant/${item.info.id}`}>

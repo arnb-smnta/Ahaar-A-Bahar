@@ -10,7 +10,6 @@ import ForgotPassword from "./components/ForgotPassword";
 import User from "./components/User";
 import CusinePage from "./components/CusinePage";
 import "./App.css";
-import RestaurantCard from "./components/secondaryComponents/RestaurantCard";
 import Restaurant from "./components/Restaurant";
 const App = () => {
   let scrollContainer = document.querySelector(".toprestaurant");

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const ItemCarousel = () => {
   const carouselItems = useSelector((appstore) => appstore.data.homePageData);
-  console.log(carouselItems);
+
   return carouselItems ? (
     <div>
       <div>
