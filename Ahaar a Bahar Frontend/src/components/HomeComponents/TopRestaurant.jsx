@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { swiggyImageServer } from "../../utils/swiggyofficialapis";
@@ -9,11 +9,33 @@ const TopRestaurant = () => {
   const toprestaurantitems = useSelector(
     (appstore) => appstore.data.homePageData
   );
+  useEffect(function addeventlistner() {
+    let scrollContainer = document.querySelector(".toprestaurant");
+    let backbtn = document.querySelector(".arrowleft");
+    let nextbtn = document.querySelector(".arrowright");
+    if (scrollContainer !== null) {
+      scrollContainer.addEventListener("wheel", (e) => {
+        e.preventDefault();
+        scrollContainer.scrollLeft += e.deltaY;
+      });
+
+      nextbtn.addEventListener("click", () => {
+        scrollContainer.style.scrollBehaviour = "smooth";
+        scrollContainer.scrollLeft -= 350;
+      });
+
+      backbtn.addEventListener("click", () => {
+        scrollContainer.style.scrollBehaviour = "smooth";
+        scrollContainer.scrollLeft += 350;
+      });
+    }
+  }, []);
+
   return toprestaurantitems ? (
-    <div>
+    <div className="">
       <div className="mt-12">
         <div className="flex justify-between">
-          <div>
+          <div className="">
             <h1 className="text-3xl font-bold font-serif">
               {toprestaurantitems.data.cards[1].card.card.header.title}
             </h1>
@@ -26,7 +48,7 @@ const TopRestaurant = () => {
           </div>
         </div>
 
-        <div className="md:h-[400px] shadow-lg flex overflow-x-auto min-w-[1800px] toprestaurant">
+        <div className="md:h-[400px] shadow-lg flex overflow-x-auto max-w-[100%] toprestaurant">
           {toprestaurantitems.data.cards[1].card.card.gridElements.infoWithStyle.restaurants.map(
             (item) => (
               <Link

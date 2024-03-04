@@ -41,21 +41,31 @@ const Header = () => {
       <div className="header-secondhalf flex justify-between w-[50%] pt-8 pr-60">
         <section className="flex cursor-pointer">
           <CiSearch className="h-6" />{" "}
-          <h1 className="ml-2 font-medium text-gray-600">Search</h1>
+          <h1 className="ml-2 font-medium text-gray-600 hover:text-orange-600">
+            Search
+          </h1>
         </section>
-        <section className="flex cursor-pointer">
-          <IoHelpBuoyOutline className="h-6" />
-          <h1 className="ml-2 font-medium text-gray-600">Help</h1>
-        </section>
+        <Link to="/support/partner-onboarding">
+          <section className="flex cursor-pointer">
+            <IoHelpBuoyOutline className="h-6" />
+            <h1 className="ml-2 font-medium text-gray-600 hover:text-orange-600">
+              Help
+            </h1>
+          </section>
+        </Link>
         <section className="flex cursor-pointer">
           <FaRegUser className="h-6" />
-          <h1 className="ml-2 font-medium text-gray-600">Sign In</h1>
+          <h1 className="ml-2 font-medium text-gray-600 hover:text-orange-600">
+            Sign In
+          </h1>
         </section>
         <Link to="/cart">
           <section className="flex cursor-pointer">
             {" "}
             <FaOpencart className="h-6" />
-            <h1 className="ml-2 font-medium text-gray-600">Cart</h1>
+            <h1 className="ml-2 font-medium text-gray-600 hover:text-orange-600">
+              Cart
+            </h1>
           </section>
         </Link>
       </div>

@@ -11,8 +11,8 @@ const RestaurantCard = ({ item }) => {
   }, []);
 
   return (
-    <div className={`mx-6 shadow-xl my-4 w-[${cardwidth}px] p-4 h-[550px]`}>
-      <div className="p-4">
+    <div className="md:mx-2 md:w-[290px] md:my-2 shadow-2xl h-[600px] w-[360px]">
+      <div className="pt-10 px-8 pb-2 ">
         <img
           src={`${swiggyImageServer}fl_lossy,f_auto,q_auto,w_288,h_360/${item.info.cloudinaryImageId}`}
           alt={`${item.info.name}`}

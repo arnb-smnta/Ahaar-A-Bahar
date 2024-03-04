@@ -27,7 +27,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="md:min-h-[1200px]  pt-24 px-[10%] md:min-w-[2300px] w-screen">
+    <div className="md:min-h-[1200px]  pt-24 px-[10%]  w-screen">
       <ItemCarousel />
       <TopRestaurant />
       <MainContainer />

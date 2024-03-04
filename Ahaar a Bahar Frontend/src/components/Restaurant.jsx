@@ -10,7 +10,8 @@ const Restaurant = () => {
   const dispatch = useDispatch();
   const data = useSelector((appstore) => appstore.data.restaurantData);
   const resdata = data[res_id];
-  console.log(res_id);
+  console.log(data);
+  console.log(resdata);
 
   useEffect(() => {
     function fetchdata() {

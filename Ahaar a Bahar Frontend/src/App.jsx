@@ -11,26 +11,14 @@ import User from "./components/User";
 import CusinePage from "./components/CusinePage";
 import "./App.css";
 import Restaurant from "./components/Restaurant";
+import ErrorComponent from "./components/ErrorComponent";
+
+import Help from "./components/Help";
+
+import Legal from "./components/HelpPageComponents/Legal";
+import FAQs from "./components/HelpPageComponents/FAQs";
+import PartneronBoarding from "./components/HelpPageComponents/PartneronBoarding";
 const App = () => {
-  let scrollContainer = document.querySelector(".toprestaurant");
-  let backbtn = document.querySelector(".arrowleft");
-  let nextbtn = document.querySelector(".arrowright");
-  if (scrollContainer !== null) {
-    scrollContainer.addEventListener("wheel", (e) => {
-      e.preventDefault();
-      scrollContainer.scrollLeft += e.deltaY;
-    });
-
-    nextbtn.addEventListener("click", () => {
-      scrollContainer.style.scrollBehaviour = "smooth";
-      scrollContainer.scrollLeft -= 350;
-    });
-
-    backbtn.addEventListener("click", () => {
-      scrollContainer.style.scrollBehaviour = "smooth";
-      scrollContainer.scrollLeft += 350;
-    });
-  }
   const approuter = createBrowserRouter([
     {
       path: "/",
@@ -63,6 +51,25 @@ const App = () => {
           element: <Restaurant />,
         },
       ],
+    },
+    {
+      path: "/support",
+      element: <Help />,
+      children: [
+        { path: "/support/partner-onboarding", element: <PartneronBoarding /> },
+        {
+          path: "/support/legal",
+          element: <Legal />,
+        },
+        {
+          path: "/support/faq",
+          element: <FAQs />,
+        },
+      ],
+    },
+    {
+      path: "*",
+      element: <ErrorComponent />,
     },
   ]);
 

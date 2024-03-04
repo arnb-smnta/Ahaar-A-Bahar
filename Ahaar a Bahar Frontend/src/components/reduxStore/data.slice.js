@@ -5,6 +5,7 @@ const dataSlice = createSlice({
   initialState: {
     homePageData: null,
     restaurantData: {},
+    supportData: {},
   },
   reducers: {
     addHomePageData: (state, action) => {
@@ -14,8 +15,13 @@ const dataSlice = createSlice({
       const { key, data } = action.payload;
       state.restaurantData[key] = data;
     },
+    addSupportData: (state, action) => {
+      const { key, data } = action.payload;
+      state.supportData[key] = data;
+    },
   },
 });
 
-export const { addHomePageData, addRestaurantData } = dataSlice.actions;
+export const { addHomePageData, addRestaurantData, addSupportData } =
+  dataSlice.actions;
 export default dataSlice.reducer;
